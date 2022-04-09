@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+
+extension Int {
+    var convertedTime: String {
+        
+        
+        let minutes = self / 60
+        let seconds = self % 60
+        
+        return String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
+    }
+}
+
+// Main content view
+
+
+
 struct ContentView: View {
     var body: some View {
         
@@ -20,8 +36,7 @@ struct ContentView: View {
                 .rotationEffect(.degrees(180))
             
             
-            Rectangle()
-                .foregroundColor(.black)
+            CentreView()
                 .frame(height: 50)
                 
                 
@@ -33,6 +48,8 @@ struct ContentView: View {
         
     }
 }
+
+// View that generates
 
 struct PlayerRectView: View {
     
@@ -91,7 +108,18 @@ struct LifeChangeButton: View {
 }
 
 struct CentreView: View {
+    @ObservedObject var gameTimeSeconds = GameTime()
     
+    var body: some View {
+        ZStack{
+            Rectangle()
+                .background(Color.black)
+            Text(gameTimeSeconds.gameTimeSeconds.convertedTime)
+                .foregroundColor(.white)
+        }
+        
+       
+    }
 }
 
 
