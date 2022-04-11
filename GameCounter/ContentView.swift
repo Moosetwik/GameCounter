@@ -37,7 +37,7 @@ struct ContentView: View {
             
             
             CentreView()
-                .frame(height: 50)
+                .frame(height: 75)
                 
                 
             PlayerRectView(rectColor: .blue)
@@ -55,6 +55,7 @@ struct PlayerRectView: View {
     
     @State private var lifeTotal = 20
     
+    
     var rectColor: Color
     
     var body: some View {
@@ -62,20 +63,36 @@ struct PlayerRectView: View {
         ZStack{
             Rectangle()
                 .foregroundColor(rectColor)
-            Text("\(lifeTotal)")
+            
+            HStack{
                
+                LifeChangeButtonView(lifeTotal: $lifeTotal, isPositive: false)
+              LifeChangeButtonView(lifeTotal: $lifeTotal, isPositive: true)
                 
+            }
+            
+            Text("\(lifeTotal)")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .font(.system(size: 220))
                 .minimumScaleFactor(0.1)
                 .lineLimit(1)
+                .foregroundColor(.black)
+                .allowsHitTesting(false)
+                
+            
+            
             
             HStack{
-               
-                LifeChangeButton(lifeTotal: $lifeTotal, isPositive: false)
-              LifeChangeButton(lifeTotal: $lifeTotal, isPositive: true)
-                
+                Image(systemName: "minus")
+                    .font(Font.system(size: 20, weight: .bold))
+                    
+                Spacer()
+                Image(systemName: "plus")
+                    .font(Font.system(size: 20, weight: .bold))
             }
+            .padding(30)
+            .opacity(0.2)
+            
                
                 
             
@@ -84,43 +101,8 @@ struct PlayerRectView: View {
     }
 }
 
-struct LifeChangeButton: View {
-    
-    @Binding var lifeTotal: Int
-    let isPositive: Bool
-    
-    var body: some View {
-        Button {
-            
-            if isPositive {
-                lifeTotal += 1
-                print(isPositive)
-            } else {
-                lifeTotal -= 1
-            }
-            
-            
-        } label: {
-            Text("")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-    }
-}
 
-struct CentreView: View {
-    @ObservedObject var gameTimeSeconds = GameTime()
-    
-    var body: some View {
-        ZStack{
-            Rectangle()
-                .background(Color.black)
-            Text(gameTimeSeconds.gameTimeSeconds.convertedTime)
-                .foregroundColor(.white)
-        }
-        
-       
-    }
-}
+
 
 
 struct ContentView_Previews: PreviewProvider {
