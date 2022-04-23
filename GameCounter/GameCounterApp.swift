@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct GameCounterApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(lifeLogP1: [20], lifeLogP2: [20])
         }
     }
 }

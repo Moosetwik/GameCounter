@@ -9,9 +9,11 @@ import SwiftUI
 
 struct CentreView: View {
     @ObservedObject var gameTimeSeconds = GameTime()
-    
+ 
+ 
     @State private var historyPresented = false
     @State private var settingsPresented = false
+    @Binding var lifeLogP1: [Int]
     
 
     var body: some View {
@@ -24,9 +26,12 @@ struct CentreView: View {
                 .foregroundColor(.white)
             HStack {
                 
+               
                 
                 Button {
                     self.historyPresented = true
+                  
+                    
                 } label: {
                     Image(systemName: "scroll")
                         .resizable()
@@ -35,7 +40,7 @@ struct CentreView: View {
                         .padding(.all, 25.0)
                         .sheet(isPresented: $historyPresented) {
                             
-                        HistoryView(historyPresented: $historyPresented)
+                            HistoryView(historyPresented: $historyPresented, lifeLogP1: $lifeLogP1)
                                 .padding()
                             }
                         
@@ -91,14 +96,23 @@ struct SettingsView: View {
     }
 }
 
+
+
+
+
 struct HistoryView: View {
     
+    
     @Binding var historyPresented: Bool
-
+    @Binding var lifeLogP1: [Int]
+    
+    
     var body: some View {
         NavigationView {
-            Rectangle()
-                .foregroundColor(.red)
+            
+            List(lifeLogP1, id: \.self) { item in
+                Text("\(item)")
+            }
                 .navigationTitle("History")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -115,8 +129,4 @@ struct HistoryView: View {
     }
 }
 
-struct CentreView_Previews: PreviewProvider {
-    static var previews: some View {
-        CentreView()
-    }
-}
+

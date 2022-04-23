@@ -24,6 +24,8 @@ extension Int {
 
 
 struct ContentView: View {
+    @State var lifeLogP1: [Int]
+    @State var lifeLogP2: [Int]
     var body: some View {
         
         
@@ -32,15 +34,15 @@ struct ContentView: View {
             
             //Upper Counter
             
-            PlayerRectView(rectColor: .purple)
+            PlayerRectView(lifeLog: $lifeLogP2, rectColor: .purple)
                 .rotationEffect(.degrees(180))
             
             
-            CentreView()
+            CentreView(lifeLogP1: $lifeLogP1)
                 .frame(height: 75)
                 
                 
-            PlayerRectView(rectColor: .blue)
+            PlayerRectView(lifeLog: $lifeLogP1, rectColor: .blue)
             
             
         }
@@ -49,11 +51,16 @@ struct ContentView: View {
     }
 }
 
-// View that generates
+
 
 struct PlayerRectView: View {
     
-    @State private var lifeTotal = 20
+    @State var lifeTotal = 20
+    
+    
+    @Binding var lifeLog: [Int]
+    
+    
     
     
     var rectColor: Color
@@ -65,9 +72,7 @@ struct PlayerRectView: View {
                 .foregroundColor(rectColor)
             
             HStack{
-               
-                LifeChangeButtonView(lifeTotal: $lifeTotal, isPositive: false)
-              LifeChangeButtonView(lifeTotal: $lifeTotal, isPositive: true)
+                LifeChangeButtonView(lifeTotal: $lifeTotal, damage: 0, lifeLog: $lifeLog)
                 
             }
             
@@ -105,8 +110,4 @@ struct PlayerRectView: View {
 
 
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+
