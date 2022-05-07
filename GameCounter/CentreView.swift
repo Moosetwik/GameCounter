@@ -13,7 +13,7 @@ struct CentreView: View {
     
     @State private var historyPresented = false
     @State private var settingsPresented = false
-    @Binding var lifeLogP1: LifeHistory
+    @Binding var lifeLog: LifeHistory
     
     
     var body: some View {
@@ -40,7 +40,7 @@ struct CentreView: View {
                         .padding(.all, 25.0)
                         .sheet(isPresented: $historyPresented) {
                             
-                            HistoryView(historyPresented: $historyPresented, lifeLogP1: $lifeLogP1)
+                            HistoryView(historyPresented: $historyPresented, lifeLog: $lifeLog)
                                 .padding()
                         }
                     
@@ -99,63 +99,4 @@ struct SettingsView: View {
 
 
 
-
-struct HistoryView: View {
-    
-    
-    @Binding var historyPresented: Bool
-    @Binding var lifeLogP1: LifeHistory
-    
-    
-    var body: some View {
-        NavigationView {
-            
-            List() {
-                
-                ForEach(Array(zip(lifeLogP1.lifeLogP1.indices, lifeLogP1.lifeLogP1)), id: \.0) { index, item in
-                    HistoryCell(lifeLogP1: item, damageTaken: lifeLogP1.damageTakenP1[index])
-                }
-                
-            
-            }
-            
-            .navigationTitle("History")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                Button {
-                    historyPresented = false
-                } label: {
-                    Text("Done")
-                }
-                
-            }
-            
-        }
-        
-    }
-}
-
-struct HistoryCell: View {
-    var lifeLogP1: Int
-    var damageTaken: Int
-    
-    var body: some View {
-        
-        HStack{
-            Text("\(lifeLogP1)")
-                .font(.largeTitle)
-                .padding()
-            Spacer()
-            Text("\(damageTaken)")
-                .font(.largeTitle)
-                .padding()
-        }
-    }
-}
-
-struct HistoryCell_Preview: PreviewProvider {
-    static var previews: some View {
-        HistoryCell(lifeLogP1: 25, damageTaken: 5).previewLayout(.sizeThatFits)
-    }
-}
 

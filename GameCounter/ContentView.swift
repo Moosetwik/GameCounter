@@ -18,19 +18,19 @@ extension Int {
 }
 
 struct ContentView: View {
-    @State var lifeLogP1: LifeHistory
-    @State var lifeLogP2: [Int]
+    @State var lifeLog: LifeHistory
+    
     var body: some View {
 
         VStack(spacing: 0) {
             
             //Upper Counter
             
-            PlayerRectView(lifeLog: $lifeLogP2, damageTaken: $lifeLogP1.damageTakenP2, rectColor: .purple)
+            PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .purple)
                 .rotationEffect(.degrees(180))
-            CentreView(lifeLogP1: $lifeLogP1)
+            CentreView(lifeLog: $lifeLog)
                 .frame(height: 75)
-            PlayerRectView(lifeLog: $lifeLogP1.lifeLogP1, damageTaken: $lifeLogP1.damageTakenP1, rectColor: .blue)
+            PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
 
         }
         .ignoresSafeArea()

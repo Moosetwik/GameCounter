@@ -34,7 +34,7 @@ struct LifeChangeButtonView: View, Identifiable {
     @State var p1connectedTimer: Cancellable? = nil
     
     func instantiateTimer() {
-        self.p1Timer = Timer.publish(every: 3, on: .main, in: .common)
+        self.p1Timer = Timer.publish(every: 0.5, on: .main, in: .common)
         self.p1connectedTimer = p1Timer.connect()
         return
     }
