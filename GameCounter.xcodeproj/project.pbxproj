@@ -14,6 +14,7 @@
 		55AEDC222801B0A1003D7269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55AEDC212801B0A1003D7269 /* Assets.xcassets */; };
 		55AEDC252801B0A1003D7269 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55AEDC242801B0A1003D7269 /* Preview Assets.xcassets */; };
 		55AEDC2C2801C36A003D7269 /* GameTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AEDC2B2801C36A003D7269 /* GameTimer.swift */; };
+		55B2F07D2825E53F007AC0D0 /* LifeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2F07C2825E53F007AC0D0 /* LifeModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		55AEDC212801B0A1003D7269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		55AEDC242801B0A1003D7269 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		55AEDC2B2801C36A003D7269 /* GameTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTimer.swift; sourceTree = "<group>"; };
+		55B2F07C2825E53F007AC0D0 /* LifeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */,
 				558B85DA2804373A009C8F36 /* CentreView.swift */,
 				55AEDC2B2801C36A003D7269 /* GameTimer.swift */,
+				55B2F07C2825E53F007AC0D0 /* LifeModel.swift */,
 				55AEDC212801B0A1003D7269 /* Assets.xcassets */,
 				55AEDC232801B0A1003D7269 /* Preview Content */,
 			);
@@ -151,6 +154,7 @@
 				55AEDC1E2801B09D003D7269 /* GameCounterApp.swift in Sources */,
 				55AEDC2C2801C36A003D7269 /* GameTimer.swift in Sources */,
 				558B85DB2804373A009C8F36 /* CentreView.swift in Sources */,
+				55B2F07D2825E53F007AC0D0 /* LifeModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

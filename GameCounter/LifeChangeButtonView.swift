@@ -19,8 +19,8 @@ struct LifeChangeButtonView: View, Identifiable {
     @State private var positiveTapped = false
     @State private var negativeTapped = false
     @State private var captureBegan = false
-    @State var damage: Int = 0
-    @State var damageTaken: [Int] = [0]
+    @State var damage = 0
+    @Binding var damageTaken: [Int]
     @Binding var lifeLog: [Int]
     
     
