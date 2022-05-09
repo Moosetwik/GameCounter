@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		557A3C0528294B5B00F4117A /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A3C0428294B5B00F4117A /* SettingsModel.swift */; };
 		558B85DB2804373A009C8F36 /* CentreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558B85DA2804373A009C8F36 /* CentreView.swift */; };
 		558B85DF2804494E009C8F36 /* LifeChangeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */; };
 		55AEDC1E2801B09D003D7269 /* GameCounterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AEDC1D2801B09D003D7269 /* GameCounterApp.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		557A3C0428294B5B00F4117A /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		558B85DA2804373A009C8F36 /* CentreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentreView.swift; sourceTree = "<group>"; };
 		558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeChangeButtonView.swift; sourceTree = "<group>"; };
 		55AEDC1A2801B09D003D7269 /* GameCounter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameCounter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,8 +68,7 @@
 				558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */,
 				558B85DA2804373A009C8F36 /* CentreView.swift */,
 				55B2F07E2826AE6D007AC0D0 /* HistoryView.swift */,
-				55AEDC2B2801C36A003D7269 /* GameTimer.swift */,
-				55B2F07C2825E53F007AC0D0 /* LifeModel.swift */,
+				55B2F0802827C0E2007AC0D0 /* Models */,
 				55AEDC212801B0A1003D7269 /* Assets.xcassets */,
 				55AEDC232801B0A1003D7269 /* Preview Content */,
 			);
@@ -80,6 +81,16 @@
 				55AEDC242801B0A1003D7269 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		55B2F0802827C0E2007AC0D0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				55AEDC2B2801C36A003D7269 /* GameTimer.swift */,
+				55B2F07C2825E53F007AC0D0 /* LifeModel.swift */,
+				557A3C0428294B5B00F4117A /* SettingsModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				557A3C0528294B5B00F4117A /* SettingsModel.swift in Sources */,
 				55B2F07F2826AE6D007AC0D0 /* HistoryView.swift in Sources */,
 				55AEDC202801B09D003D7269 /* ContentView.swift in Sources */,
 				558B85DF2804494E009C8F36 /* LifeChangeButtonView.swift in Sources */,

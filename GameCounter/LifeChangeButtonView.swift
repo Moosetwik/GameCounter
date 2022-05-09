@@ -16,6 +16,7 @@ struct LifeChangeButtonView: View, Identifiable {
     var id = UUID()
     @Binding var lifeTotal: Int
     
+    
     @State private var positiveTapped = false
     @State private var negativeTapped = false
     @State private var captureBegan = false
@@ -30,24 +31,20 @@ struct LifeChangeButtonView: View, Identifiable {
     @State var timerRunning = false
    
 
-    @State var p1Timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
+    @State var p1Timer: Timer.TimerPublisher = Timer.publish(every: 3, on: .main, in: .common)
     @State var p1connectedTimer: Cancellable? = nil
     
     func instantiateTimer() {
-        self.p1Timer = Timer.publish(every: 0.5, on: .main, in: .common)
+        self.p1Timer = Timer.publish(every: 3, on: .main, in: .common)
         self.p1connectedTimer = p1Timer.connect()
         return
     }
     
-    func cancelTimer() {
-        self.p1connectedTimer?.cancel()
-        
-        return
-    }
+    
     
     func restartTimer() {
         self.secondsElapsed = 0
-        self.cancelTimer()
+        self.timer.cancelTimer(timerType: p1connectedTimer!)
         self.instantiateTimer()
         return
     }
@@ -137,7 +134,7 @@ struct LifeChangeButtonView: View, Identifiable {
             damage = 0
             lifeLog.append(lifeTotal)
             
-            self.cancelTimer()
+            self.timer.cancelTimer(timerType: p1connectedTimer!)
             print("Timer ended")
             print("Log: \(lifeLog)")
             

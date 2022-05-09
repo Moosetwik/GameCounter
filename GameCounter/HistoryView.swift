@@ -31,7 +31,7 @@ struct HistoryView: View {
                             Text("Damage Taken")
                         }
                         ) {
-                        ForEach(Array(zip(lifeLog.lifeLogP1.indices, lifeLog.lifeLogP1)), id: \.0) { index, item in
+                            ForEach(Array(lifeLog.lifeLogP1.enumerated()), id: \.0) { index, item in
                             HistoryCell(lifeLog: item, damageTaken: lifeLog.damageTakenP1[index])
                         }
                         }
@@ -54,7 +54,7 @@ struct HistoryView: View {
                             Text("Damage Taken")
                         }
                         ) {
-                        ForEach(Array(zip(lifeLog.lifeLogP2.indices, lifeLog.lifeLogP2)), id: \.0) { index, item in
+                            ForEach(Array(lifeLog.lifeLogP2.enumerated()), id: \.0) { index, item in
                             HistoryCell(lifeLog: item, damageTaken: lifeLog.damageTakenP2[index])
                         }
                         }

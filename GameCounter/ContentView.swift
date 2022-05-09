@@ -31,6 +31,7 @@ struct ContentView: View {
             CentreView(lifeLog: $lifeLog)
                 .frame(height: 75)
             PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
+                
 
         }
         .ignoresSafeArea()
@@ -43,7 +44,7 @@ struct PlayerRectView: View {
     @State var lifeTotal = 20
     @Binding var lifeLog: [Int]
     @Binding var damageTaken: [Int]
-    var rectColor: Color
+    @State var rectColor: Color
     
     var body: some View {
         
@@ -63,6 +64,8 @@ struct PlayerRectView: View {
                 .lineLimit(1)
                 .foregroundColor(.black)
                 .allowsHitTesting(false)
+                .monospacedDigit()
+                
 
             HStack{
                 Image(systemName: "minus")
