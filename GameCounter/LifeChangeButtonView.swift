@@ -124,6 +124,7 @@ struct LifeChangeButtonView: View, Identifiable {
   
                 }
                 
+                
             }
         }
         .onReceive(self.p1Timer) { _ in

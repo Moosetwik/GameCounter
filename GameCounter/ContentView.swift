@@ -19,9 +19,10 @@ extension Int {
 
 struct ContentView: View {
     @State var lifeLog: LifeHistory
+   
     
     var body: some View {
-
+        ZStack{
         VStack(spacing: 0) {
             
             //Upper Counter
@@ -31,10 +32,19 @@ struct ContentView: View {
             CentreView(lifeLog: $lifeLog)
                 .frame(height: 75)
             PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
+            
+            
                 
 
         }
         .ignoresSafeArea()
+            Circle()
+                .fill()
+                .foregroundColor(.black)
+                .frame(width: 135.0, height: 135.0, alignment: .center)
+                .shadow(color: .black, radius: 10, x: 0, y: 0)
+           TimerView()
+        }
         
     }
 }
@@ -58,6 +68,7 @@ struct PlayerRectView: View {
             }
             
             Text("\(lifeTotal)")
+                .fontWeight(.medium)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .font(.system(size: 220))
                 .minimumScaleFactor(0.1)
