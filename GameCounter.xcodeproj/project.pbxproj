@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		55232CCF282EA27100D5BEEE /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55232CCE282EA27100D5BEEE /* TimerView.swift */; };
+		5571CC572831127200FD192E /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5571CC562831127200FD192E /* Shapes.swift */; };
 		557A3C0528294B5B00F4117A /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A3C0428294B5B00F4117A /* SettingsModel.swift */; };
 		558B85DB2804373A009C8F36 /* CentreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558B85DA2804373A009C8F36 /* CentreView.swift */; };
 		558B85DF2804494E009C8F36 /* LifeChangeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		55232CCE282EA27100D5BEEE /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		5571CC562831127200FD192E /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
 		557A3C0428294B5B00F4117A /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		558B85DA2804373A009C8F36 /* CentreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentreView.swift; sourceTree = "<group>"; };
 		558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeChangeButtonView.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				558B85DE2804494E009C8F36 /* LifeChangeButtonView.swift */,
 				558B85DA2804373A009C8F36 /* CentreView.swift */,
 				55232CCE282EA27100D5BEEE /* TimerView.swift */,
+				5571CC562831127200FD192E /* Shapes.swift */,
 				55B2F07E2826AE6D007AC0D0 /* HistoryView.swift */,
 				55B2F0802827C0E2007AC0D0 /* Models */,
 				55AEDC212801B0A1003D7269 /* Assets.xcassets */,
@@ -173,6 +176,7 @@
 				558B85DF2804494E009C8F36 /* LifeChangeButtonView.swift in Sources */,
 				55AEDC1E2801B09D003D7269 /* GameCounterApp.swift in Sources */,
 				55AEDC2C2801C36A003D7269 /* GameTimer.swift in Sources */,
+				5571CC572831127200FD192E /* Shapes.swift in Sources */,
 				558B85DB2804373A009C8F36 /* CentreView.swift in Sources */,
 				55B2F07D2825E53F007AC0D0 /* LifeModel.swift in Sources */,
 			);

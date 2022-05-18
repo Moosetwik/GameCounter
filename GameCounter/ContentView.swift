@@ -19,8 +19,6 @@ extension Int {
 
 struct ContentView: View {
     @State var lifeLog: LifeHistory
-   
-    
     var body: some View {
         ZStack{
         VStack(spacing: 0) {
@@ -29,21 +27,17 @@ struct ContentView: View {
             
             PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .purple)
                 .rotationEffect(.degrees(180))
-            CentreView(lifeLog: $lifeLog)
-                .frame(height: 75)
+                
+            
+                
             PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
-            
-            
                 
 
         }
         .ignoresSafeArea()
-            Circle()
-                .fill()
-                .foregroundColor(.black)
-                .frame(width: 135.0, height: 135.0, alignment: .center)
-                .shadow(color: .black, radius: 10, x: 0, y: 0)
-           TimerView()
+            
+            CentreView()
+                .ignoresSafeArea()
         }
         
     }
@@ -61,12 +55,16 @@ struct PlayerRectView: View {
         ZStack{
             Rectangle()
                 .foregroundColor(rectColor)
-            
-            HStack{
+                .gesture(DragGesture(minimumDistance: 0)
+                    .onChanged({ _ in
+                        print("touch")
+                    }))
+            /*
+          HStack{
                 LifeChangeButtonView(lifeTotal: $lifeTotal, damage: 0, damageTaken: $damageTaken, lifeLog: $lifeLog)
                 
             }
-            
+            */
             Text("\(lifeTotal)")
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

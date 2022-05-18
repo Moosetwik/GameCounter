@@ -95,7 +95,9 @@ struct LifeChangeButtonView: View, Identifiable {
     var body: some View {
         
         ZStack {
+            
             HStack(spacing: 0.0) {
+                
                 Button {
                     buttonTapped(isPositive: false)
                 } label: {
@@ -124,6 +126,9 @@ struct LifeChangeButtonView: View, Identifiable {
   
                 }
                 
+                
+                
+            
                 
             }
         }
