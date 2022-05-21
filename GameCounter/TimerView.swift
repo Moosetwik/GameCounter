@@ -91,7 +91,7 @@ struct TimerView: View {
                    
                     Circle()
                         .trim(from: 0.0, to: timerCompletion)
-                        .stroke(.white, lineWidth: strokeSize)
+                        .stroke(.gray, lineWidth: strokeSize)
                         .rotationEffect(.degrees(270))
                         .frame(width: timerSize, height: timerSize, alignment: .center)
                     
@@ -101,7 +101,7 @@ struct TimerView: View {
                             .foregroundColor(timerPaused ? (.white.opacity(0.25)) : (.white.opacity(0.0)))
          
                     Text(gameTimeSeconds.convertedTime)
-                        .foregroundColor(timerPaused ? .red : .white)
+                        .foregroundColor(timerPaused ? .red : .gray)
                         .font(.title)
                         .fontWeight(.bold)
                         .monospacedDigit()

@@ -17,8 +17,7 @@ struct CentreView: View {
     @State var player2Name = "Player 2"
     @State var player1editingText = false
     @State var player2editingText = false
-    @State var timerSize: CGFloat = 100.0
-    @State var strokeSize: CGFloat = 10.0
+    @State var rectHeight = 50.0
     @FocusState private var isFocused: Bool
      
     
@@ -35,20 +34,10 @@ struct CentreView: View {
         ZStack {
             HStack(spacing: 0) {
                 ZStack {
-                    VStack(spacing: 0) {
-                        Triangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 30, height: 15)
-                            
                         Rectangle()
                             .foregroundColor(.black)
-                            
-                        .frame(height: 75)
-                        Triangle()
-                            .foregroundColor(.black)
-                            .frame(width: 30, height: 15)
-                            .rotationEffect(.degrees(180))
-                    }
+                            .frame(height: rectHeight)
+
                     .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 0)
                     if !player1editingText {
                         Text(player1Name)
@@ -105,24 +94,15 @@ struct CentreView: View {
                 
                 Rectangle()
                     .foregroundColor(.black)
-                    .frame(width: 145, height: 75)
+                    .frame(width: 145, height: rectHeight)
                     .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 0)
                 
                 ZStack {
-                    VStack(spacing: 0) {
-                        
-                        Triangle()
-                            .foregroundColor(.black)
-                            .frame(width: 30, height: 15)
+               
                         Rectangle()
                             .foregroundColor(.black)
-                        .frame(height: 75)
-                        
-                        Triangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 30, height: 15)
-                            .rotationEffect(.degrees(180))
-                    }
+                        .frame(height: rectHeight)
+
                     .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 0)
                     
                     if !player2editingText {
@@ -182,11 +162,7 @@ struct CentreView: View {
             }
             
             
-            Circle()
-                 .foregroundColor(.black)
-                 .frame(width: timerSize + strokeSize, height: timerSize + strokeSize)
-                 .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 0)
-            TimerView(timerSize: $timerSize, strokeSize: $strokeSize)
+            
             
         }
         

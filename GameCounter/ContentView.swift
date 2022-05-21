@@ -19,25 +19,37 @@ extension Int {
 
 struct ContentView: View {
     @State var lifeLog: LifeHistory
+    @State var timerSize: CGFloat = 100.0
+    @State var strokeSize: CGFloat = 10.0
     var body: some View {
         ZStack{
+            Rectangle()
+                .foregroundColor(.white)
+                .ignoresSafeArea()
+                
         VStack(spacing: 0) {
             
             //Upper Counter
             
-            PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .purple)
-                .rotationEffect(.degrees(180))
-                
-            
-                
-            PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
+            HStack {
+                PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .purple)
+                    .rotationEffect(.degrees(180))
+            }
+            CentreView()
+            HStack {
+                PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
+            }
                 
 
         }
         .ignoresSafeArea()
+
+            Circle()
+                 .foregroundColor(.black)
+                 .frame(width: timerSize + strokeSize, height: timerSize + strokeSize)
+                 .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 0)
+            TimerView(timerSize: $timerSize, strokeSize: $strokeSize)
             
-            CentreView()
-                .ignoresSafeArea()
         }
         
     }
@@ -49,29 +61,24 @@ struct PlayerRectView: View {
     @Binding var lifeLog: [Int]
     @Binding var damageTaken: [Int]
     @State var rectColor: Color
-    
+
     var body: some View {
         
         ZStack{
-            Rectangle()
-                .foregroundColor(rectColor)
-                .gesture(DragGesture(minimumDistance: 0)
-                    .onChanged({ _ in
-                        print("touch")
-                    }))
-            /*
+
           HStack{
-                LifeChangeButtonView(lifeTotal: $lifeTotal, damage: 0, damageTaken: $damageTaken, lifeLog: $lifeLog)
+              LifeChangeButtonView(lifeTotal: $lifeTotal, damage: 0, rectColor: $rectColor, damageTaken: $damageTaken, lifeLog: $lifeLog)
                 
             }
-            */
+            
             Text("\(lifeTotal)")
                 .fontWeight(.medium)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .font(.system(size: 220))
-                .minimumScaleFactor(0.1)
+                .minimumScaleFactor(0.7)
                 .lineLimit(1)
                 .foregroundColor(.black)
+                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
                 .allowsHitTesting(false)
                 .monospacedDigit()
                 
@@ -86,6 +93,8 @@ struct PlayerRectView: View {
             }
             .padding(30)
             .opacity(0.2)
+            
+            
  
         } 
     }

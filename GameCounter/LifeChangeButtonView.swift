@@ -21,9 +21,12 @@ struct LifeChangeButtonView: View, Identifiable {
     @State private var negativeTapped = false
     @State private var captureBegan = false
     @State var damage = 0
+    @Binding var rectColor: Color
     @Binding var damageTaken: [Int]
     @Binding var lifeLog: [Int]
-    
+    @State var posTouchdown = false
+    @State var negTouchdown = false
+ 
     
     var timer = GameTime()
     
@@ -39,9 +42,7 @@ struct LifeChangeButtonView: View, Identifiable {
         self.p1connectedTimer = p1Timer.connect()
         return
     }
-    
-    
-    
+
     func restartTimer() {
         self.secondsElapsed = 0
         self.timer.cancelTimer(timerType: p1connectedTimer!)
@@ -51,7 +52,6 @@ struct LifeChangeButtonView: View, Identifiable {
     
    
     func captureLife() -> Int {
-        
         return 0
     }
     
@@ -91,46 +91,40 @@ struct LifeChangeButtonView: View, Identifiable {
 
     }
     
-
     var body: some View {
         
         ZStack {
             
-            HStack(spacing: 0.0) {
+            HStack(spacing: 0) {
                 
-                Button {
-                    buttonTapped(isPositive: false)
-                } label: {
-                    Text("")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(
+                Rectangle()
+                    .foregroundColor(!negTouchdown ? rectColor : rectColor.opacity(0.9))
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged({ _ in
+                            negTouchdown = true
+                        })
+                            .onEnded({ _ in
+                                negTouchdown = false
+                                buttonTapped(isPositive: false)
+                            })
+                )
+                
+                Rectangle()
+                    .foregroundColor(!posTouchdown ? rectColor : rectColor.opacity(0.9))
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged({ _ in
                             
-                            Color(negativeTapped ? .white : .clear)
-                                .animation(.easeInOut(duration: 0.1))
-                            
-                                .opacity(0.15))
-    
-                }
+                            posTouchdown = true
+                        })
+                            .onEnded({ _ in
+                                posTouchdown = false
+                                
+                                buttonTapped(isPositive: true)
+                            })
+                )
 
-                Button {
-                    self.buttonTapped(isPositive: true)
-                } label: {
-                    Text("")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(
-                            
-                            Color(positiveTapped ? .white : .clear)
-                                .animation(.easeInOut(duration: 0.1))
-                            
-                                .opacity(0.15))
-  
-                }
-                
-                
-                
-            
-                
             }
+            
         }
         .onReceive(self.p1Timer) { _ in
             if damage != 0 {
