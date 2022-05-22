@@ -35,7 +35,7 @@ struct ContentView: View {
                 PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .purple)
                     .rotationEffect(.degrees(180))
             }
-            CentreView()
+            
             HStack {
                 PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .blue)
             }
@@ -43,11 +43,14 @@ struct ContentView: View {
 
         }
         .ignoresSafeArea()
-
+            CentreView(lifeLog: $lifeLog)
+                .shadow(color: .black.opacity(1.0), radius: 5, x: 0, y: 0)
+                .ignoresSafeArea()
+            
             Circle()
                  .foregroundColor(.black)
                  .frame(width: timerSize + strokeSize, height: timerSize + strokeSize)
-                 .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 0)
+                 .shadow(color: .black.opacity(1.0), radius: 5, x: 0, y: 0)
             TimerView(timerSize: $timerSize, strokeSize: $strokeSize)
             
         }
