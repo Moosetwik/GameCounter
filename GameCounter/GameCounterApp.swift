@@ -12,7 +12,8 @@ struct GameCounterApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [0], lifeLogP2: [20], damageTakenP2: [0]))
+           ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [0], lifeLogP2: [20], damageTakenP2: [0]))
+           
         }
     }
 }

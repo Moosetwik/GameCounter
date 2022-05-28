@@ -16,6 +16,7 @@ struct CentreView: View {
     @State private var historyPresented = false
     @State private var settingsPresented = false
     @Binding var lifeLog: LifeHistory
+    @Binding var playerCount: Int
     var body: some View {
         
         
@@ -34,15 +35,15 @@ struct CentreView: View {
                         Image(systemName: "list.bullet.circle")
                             .resizable()
                             .frame(width: rectHeight / 2, height: rectHeight / 2, alignment: .center)
-                            
                             .aspectRatio(contentMode: .fill)
                             .foregroundColor(.white)
                             
                             
                             .sheet(isPresented: $historyPresented) {
-                                
-                                HistoryView(historyPresented: $historyPresented, lifeLog: $lifeLog)
+                                NavigationView{
+                                Test_View()
                                     .padding()
+                                }
                             }
                         
                     }
@@ -64,7 +65,8 @@ struct CentreView: View {
                     
                     Menu {
                         Button {
-                            print("button")
+                            playerCount -= 1
+                            
                         } label: {
                             Text("Player count")
                             Image(systemName: "person.2.circle")
@@ -74,16 +76,13 @@ struct CentreView: View {
                         Image(systemName: "ellipsis.circle")
                             .resizable()
                             .frame(width: rectHeight / 2, height: rectHeight / 2, alignment: .center)
-                            .padding()
-                            .aspectRatio(contentMode: .fit)
+                            .aspectRatio(contentMode: .fill)
                             .foregroundColor(.white)
-                        
-                            .sheet(isPresented: $settingsPresented) {
-                                
-                                SettingsView(settingsPresented: $settingsPresented)
-                                    .padding()
-                            }
+
+                    } primaryAction: {
+                        playerCount += 1
                     }
+                    
                     
                 }
                 
@@ -92,73 +91,7 @@ struct CentreView: View {
     }
 }
 
-struct OldCentreView: View {
-    
 
-    
-    
-    @State private var historyPresented = false
-    @State private var settingsPresented = false
-    @Binding var lifeLog: LifeHistory
-    
-    
-    
-    
-    var body: some View {
-        ZStack{
-            Rectangle()
-                .foregroundColor(.black)
-            
-            
-            HStack {
-                
-                Button {
-                    self.historyPresented = true
-                    
-                } label: {
-                    Image(systemName: "list.dash")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.white)
-                        .padding(.all, 25.0)
-                        .sheet(isPresented: $historyPresented) {
-                            
-                            HistoryView(historyPresented: $historyPresented, lifeLog: $lifeLog)
-                                .padding()
-                        }
-                    
-                }
-                
-                
-                
-                
-                Spacer()
-                
-                Spacer()
-                
-                Button {
-                    self.settingsPresented = true
-                    
-                } label: {
-                    Image(systemName: "gearshape")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.white)
-                        .padding(.all, 25.0)
-                        .sheet(isPresented: $settingsPresented) {
-                            
-                            SettingsView(settingsPresented: $settingsPresented)
-                                .padding()
-                        }
-                }
-                
-            }
-            
-            
-        }
-        
-    }
-}
 
 struct SettingsView: View {
     @Binding var settingsPresented: Bool

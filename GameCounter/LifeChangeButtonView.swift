@@ -10,13 +10,9 @@ import Combine
 
 
 
-struct LifeChangeButtonView: View, Identifiable {
+struct LifeChangeButtonView: View {
     
-    
-    var id = UUID()
     @Binding var lifeTotal: Int
-    
-    
     @State private var positiveTapped = false
     @State private var negativeTapped = false
     @State private var captureBegan = false
@@ -26,7 +22,8 @@ struct LifeChangeButtonView: View, Identifiable {
     @Binding var lifeLog: [Int]
     @State var posTouchdown = false
     @State var negTouchdown = false
- 
+    @Binding var rotation: Double
+    @Binding var rotated: Int
     
     var timer = GameTime()
     
@@ -93,12 +90,17 @@ struct LifeChangeButtonView: View, Identifiable {
     
     var body: some View {
         
+      
+        
         ZStack {
             
+            if rotated == 0 || rotated == 2 {
             HStack(spacing: 0) {
                 
                 Rectangle()
-                    .foregroundColor(!negTouchdown ? rectColor : rectColor.opacity(0.9))
+                    
+                    .foregroundColor(!negTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
+
                     .gesture(DragGesture(minimumDistance: 0)
                         .onChanged({ _ in
                             negTouchdown = true
@@ -110,7 +112,8 @@ struct LifeChangeButtonView: View, Identifiable {
                 )
                 
                 Rectangle()
-                    .foregroundColor(!posTouchdown ? rectColor : rectColor.opacity(0.9))
+                    .foregroundColor(!posTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
+
                     .gesture(DragGesture(minimumDistance: 0)
                         .onChanged({ _ in
                             
@@ -124,21 +127,63 @@ struct LifeChangeButtonView: View, Identifiable {
                 )
 
             }
+            .rotationEffect(.degrees(rotated == 2 ? 180 : 0))
+        }
             
+            if rotated == 1 || rotated == 3 {
+            VStack(spacing: 0) {
+                
+                Rectangle()
+                    
+                    .foregroundColor(!negTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
+
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged({ _ in
+                            negTouchdown = true
+                        })
+                            .onEnded({ _ in
+                                negTouchdown = false
+                                buttonTapped(isPositive: false)
+                            })
+                )
+                
+                Rectangle()
+                    .foregroundColor(!posTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
+               
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged({ _ in
+                            
+                            posTouchdown = true
+                        })
+                            .onEnded({ _ in
+                                posTouchdown = false
+                                
+                                buttonTapped(isPositive: true)
+                            })
+                )
+
+            }
+            .rotationEffect(.degrees(rotated == 3 ? 180 : 0))
+            }
+           
+ 
         }
         .onReceive(self.p1Timer) { _ in
             if damage != 0 {
                 self.damageTaken.append(damage)
+                lifeLog.append(lifeTotal)
             }
             print("\(damageTaken)")
             damage = 0
-            lifeLog.append(lifeTotal)
+            
             
             self.timer.cancelTimer(timerType: p1connectedTimer!)
             print("Timer ended")
             print("Log: \(lifeLog)")
             
         }
+        
+        
         
         
     }
