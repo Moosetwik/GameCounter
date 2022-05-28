@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-struct Commander: Codable, Identifiable {
+struct Commander: Codable, Identifiable, Hashable {
     let id, name: String
         let colorIdentity: [String]
 

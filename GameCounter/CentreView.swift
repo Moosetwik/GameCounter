@@ -17,6 +17,7 @@ struct CentreView: View {
     @State private var settingsPresented = false
     @Binding var lifeLog: LifeHistory
     @Binding var playerCount: Int
+    @State var commanderName = "Commander Name"
     var body: some View {
         
         
@@ -28,25 +29,28 @@ struct CentreView: View {
                         .frame(height: rectHeight)
                     
                     
-                    Button {
-                        self.historyPresented = true
-                        
-                    } label: {
-                        Image(systemName: "list.bullet.circle")
-                            .resizable()
-                            .frame(width: rectHeight / 2, height: rectHeight / 2, alignment: .center)
-                            .aspectRatio(contentMode: .fill)
-                            .foregroundColor(.white)
+                    HStack {
+                        Button {
+                            self.historyPresented = true
                             
-                            
-                            .sheet(isPresented: $historyPresented) {
-                                NavigationView{
-                                Test_View()
-                                    .padding()
+                        } label: {
+                            Image(systemName: "list.bullet.circle")
+                                .resizable()
+                                .frame(width: rectHeight / 2, height: rectHeight / 2, alignment: .center)
+                                .aspectRatio(contentMode: .fill)
+                                .foregroundColor(.white)
+                                
+                                
+                                .sheet(isPresented: $historyPresented) {
+                                    Test_View(historyPresented: $historyPresented, commanderName: $commanderName)
+                                        .padding()
                                 }
-                            }
-                        
+                            
                     }
+                        Text(commanderName)
+                    }
+                    
+                  
                     
                     
                 }
