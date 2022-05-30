@@ -22,7 +22,6 @@
 		55B2F07D2825E53F007AC0D0 /* LifeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2F07C2825E53F007AC0D0 /* LifeModel.swift */; };
 		55B2F07F2826AE6D007AC0D0 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2F07E2826AE6D007AC0D0 /* HistoryView.swift */; };
 		55C3516C2840DA5B00EB2408 /* CommanderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C3516B2840DA5B00EB2408 /* CommanderTest.swift */; };
-		55C3516F2841061D00EB2408 /* commander.json in Resources */ = {isa = PBXBuildFile; fileRef = 55C3516E2841061D00EB2408 /* commander.json */; };
 		55FD30C9283F2F4400986C8F /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FD30C8283F2F4400986C8F /* PlayerViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +42,6 @@
 		55B2F07C2825E53F007AC0D0 /* LifeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeModel.swift; sourceTree = "<group>"; };
 		55B2F07E2826AE6D007AC0D0 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		55C3516B2840DA5B00EB2408 /* CommanderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommanderTest.swift; sourceTree = "<group>"; };
-		55C3516E2841061D00EB2408 /* commander.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = commander.json; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.json; };
 		55FD30C8283F2F4400986C8F /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,7 +115,6 @@
 			children = (
 				551669022840873300938992 /* CommanderModel.swift */,
 				55C3516B2840DA5B00EB2408 /* CommanderTest.swift */,
-				55C3516E2841061D00EB2408 /* commander.json */,
 			);
 			path = CommanderAPI;
 			sourceTree = "<group>";
@@ -180,7 +177,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55C3516F2841061D00EB2408 /* commander.json in Resources */,
 				55AEDC252801B0A1003D7269 /* Preview Assets.xcassets in Resources */,
 				55AEDC222801B0A1003D7269 /* Assets.xcassets in Resources */,
 			);

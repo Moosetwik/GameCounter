@@ -9,13 +9,42 @@ import Foundation
 import SwiftUI
 
 struct Test_View: View {
-    @ObservedObject var datas = ReadData()
+
     @State private var searchText = ""
     @Binding var historyPresented: Bool
     @Binding var commanderName: String
-   
     
+    @State private var results = [Result]()
+    @State private var tempResults = [Result]()
+    @State private var pageNumber = 0
+    
+    func loadData(page: Int) async {
+        while pageNumber < 8 {
+            pageNumber += 1
+        guard let url = URL(string: "https://api.scryfall.com/cards/search?format=json&;include_extras=false&include_multilingual=false&order=name&page=\(pageNumber)&q=legal%3Acommander+is%3Acommander&unique=cards") else {
+            print("Invalid URL")
+            return
+        }
+        
+        do {
+            let (data, meta) = try await URLSession.shared.data(from: url)
+            
+            if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
+                tempResults = decodedResponse.data
+                results += tempResults
+                print("Page: \(pageNumber), page results: \(tempResults.count)")
+                print("Total results: \(results.count)")
+                tempResults.removeAll()
 
+            }
+
+        } catch {
+            print("Invalid data")
+        }
+        }
+       
+    }
+   
     func convertColor(input: String) -> Color {
         var output = Color.white
         
@@ -36,37 +65,27 @@ struct Test_View: View {
         return output
     }
     
-    var commanders: [Commander] {
+    var commanders: [Result] {
         if searchText.isEmpty {
-        return datas.commanders
+        return results
         } else {
-            return datas.commanders.filter {names in names.name.contains(searchText)}
-        }
+            return results.filter { names in
+                names.name.contains(searchText)}
+    }
     }
     
-    var searchResults: [String] {
-        var names = [String]()
-        for name in commanders {
-            names.append(name.name)
-        }
-        
-        if searchText.isEmpty {
-            return names
-        } else{
-            return names.filter {$0.contains(searchText)}
-        }
-    }
     
     var colorIds: [[String]] {
         var colors = [[String]]()
-        for color in datas.commanders {
-            colors.append(color.colorIdentity)
+        for color in results {
+            colors.append(color.color_identity)
         }
         return colors
     }
     
     var body: some View {
         NavigationView{
+ 
             List {
                 ForEach(commanders, id: \.self) { names in
                     
@@ -74,18 +93,20 @@ struct Test_View: View {
                         VStack(alignment: .leading, spacing: 5) {
 
                             Text(names.name)
+                                .font(.headline)
+                            Text(names.type_line)
+                                .font(.subheadline)
+                                
                             
                             HStack(alignment: .center, spacing: 5) {
-                                ForEach(names.colorIdentity, id: \.self) { colours in
+                                ForEach(names.color_identity, id: \.self) { colours in
                                     Rectangle()
                                         .frame(width: 50, height: 5)
                                         .foregroundColor(convertColor(input: colours))
                                 }
-                                
-                               
-
-                    
+ 
                             }
+                            .padding(.top, 5)
                         }
                         Spacer()
                         Button {
@@ -98,12 +119,16 @@ struct Test_View: View {
                     
                 }
         }
-        
-        .navigationTitle("Player 1 Commander")
-        .navigationBarItems(trailing: Button("Done") {
-            historyPresented = false
-        })
+            .navigationTitle("Player 1 Commander")
+            .navigationBarItems(trailing: Button("Done") {
+                historyPresented = false
+            })
+ 
         }
+        .task {
+            await loadData(page: pageNumber)
+        }
+        
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
 
             

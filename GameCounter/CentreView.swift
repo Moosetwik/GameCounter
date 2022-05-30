@@ -42,8 +42,10 @@ struct CentreView: View {
                                 
                                 
                                 .sheet(isPresented: $historyPresented) {
+                                    
                                     Test_View(historyPresented: $historyPresented, commanderName: $commanderName)
-                                        .padding()
+                                        
+                                    
                                 }
                             
                     }

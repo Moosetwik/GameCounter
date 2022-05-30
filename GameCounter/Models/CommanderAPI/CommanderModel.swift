@@ -8,35 +8,13 @@
 import Foundation
 import Combine
 
-struct Commander: Codable, Identifiable, Hashable {
-    let id, name: String
-        let colorIdentity: [String]
-
-        enum CodingKeys: String, CodingKey {
-            case id, name
-            case colorIdentity = "color_identity"
-        }
+struct Response: Codable {
+    var data: [Result]
 }
 
-
-class ReadData: ObservableObject  {
-    @Published var commanders = [Commander]()
-
-    init(){
-        loadData()
-    }
-    
-    func loadData()  {
-        guard let url = Bundle.main.url(forResource: "commander", withExtension: "json")
-            else {
-                print("Json file not found")
-                return
-            }
-        
-        let data = try? Data(contentsOf: url)
-        let commanders = try? JSONDecoder().decode([Commander].self, from: data!)
-        self.commanders = commanders!
-        
-    }
-     
+struct Result: Codable, Hashable {
+    var name: String = ""
+    var id: String = ""
+    var type_line: String = ""
+    var color_identity: [String] = [""]
 }
