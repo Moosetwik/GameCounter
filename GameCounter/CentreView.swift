@@ -44,8 +44,7 @@ struct CentreView: View {
                                 .sheet(isPresented: $historyPresented) {
                                     
                                     Test_View(historyPresented: $historyPresented, commanderName: $commanderName)
-                                        
-                                    
+
                                 }
                             
                     }
@@ -96,33 +95,6 @@ struct CentreView: View {
  
     }
 }
-
-
-
-struct SettingsView: View {
-    @Binding var settingsPresented: Bool
-    
-    var body: some View {
-        NavigationView {
-            Rectangle()
-                .foregroundColor(.blue)
-                .navigationTitle("Settings")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    Button {
-                        settingsPresented = false
-                    } label: {
-                        Text("Done")
-                    }
-                    
-                }
-            
-        }
-        
-    }
-}
-
-
 
 
 

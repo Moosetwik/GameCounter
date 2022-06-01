@@ -17,17 +17,20 @@ struct Test_View: View {
     @State private var results = [Result]()
     @State private var tempResults = [Result]()
     @State private var pageNumber = 0
+    @State var taskLoading = true
+    @State var taskProgress = 0.0
     
     func loadData(page: Int) async {
         while pageNumber < 8 {
             pageNumber += 1
+            taskProgress += 0.125
         guard let url = URL(string: "https://api.scryfall.com/cards/search?format=json&;include_extras=false&include_multilingual=false&order=name&page=\(pageNumber)&q=legal%3Acommander+is%3Acommander&unique=cards") else {
             print("Invalid URL")
             return
         }
         
         do {
-            let (data, meta) = try await URLSession.shared.data(from: url)
+            let (data, _) = try await URLSession.shared.data(from: url)
             
             if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
                 tempResults = decodedResponse.data
@@ -39,7 +42,7 @@ struct Test_View: View {
             }
 
         } catch {
-            print("Invalid data")
+            results = [Result(name: "Failed to load list", id: "", type_line: "Please check your connection", color_identity: [""])]
         }
         }
        
@@ -86,6 +89,9 @@ struct Test_View: View {
     var body: some View {
         NavigationView{
  
+            if taskLoading {
+                LoadingView(taskProgress: $taskProgress)
+            } else {
             List {
                 ForEach(commanders, id: \.self) { names in
                     
@@ -95,14 +101,21 @@ struct Test_View: View {
                             Text(names.name)
                                 .font(.headline)
                             Text(names.type_line)
-                                .font(.subheadline)
+                                .font(.caption)
                                 
                             
                             HStack(alignment: .center, spacing: 5) {
                                 ForEach(names.color_identity, id: \.self) { colours in
-                                    Rectangle()
-                                        .frame(width: 50, height: 5)
-                                        .foregroundColor(convertColor(input: colours))
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.black, lineWidth: 1)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .foregroundColor(convertColor(input: colours))
+                                        )
+                                        .frame(width: 30, height: 5)
+                                        
+                                        
+                                        
                                 }
  
                             }
@@ -122,11 +135,13 @@ struct Test_View: View {
             .navigationTitle("Player 1 Commander")
             .navigationBarItems(trailing: Button("Done") {
                 historyPresented = false
+                taskLoading = false
             })
- 
+            }
         }
         .task {
             await loadData(page: pageNumber)
+            taskLoading = false
         }
         
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
@@ -137,3 +152,17 @@ struct Test_View: View {
 
 }
 
+struct LoadingView: View {
+    @Binding var taskProgress: Double
+    var body: some View {
+        
+        VStack(alignment: .center, spacing: 10) {
+            Text("Loading Commanders...")
+                .font(.subheadline)
+                .disabled(true)
+            ProgressView(value: taskProgress)
+                .animation(.easeInOut, value: taskProgress)
+        }
+        .padding(100)
+    }
+}
