@@ -85,7 +85,12 @@ struct CentreView: View {
                             .foregroundColor(.white)
 
                     } primaryAction: {
-                        playerCount += 1
+                        settingsPresented = true
+                    }
+                    .sheet(isPresented: $settingsPresented) {
+                        
+                        SettingsView(playerCount: $playerCount)
+
                     }
                     
                     
