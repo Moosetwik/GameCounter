@@ -8,11 +8,32 @@
 import Foundation
 import SwiftUI
 
-struct Test_View: View {
+func convertColor(input: String) -> Color {
+    var output = Color.white
+    
+    switch input {
+    case "W":
+        output = .white
+    case "R":
+        output = .red
+    case "B":
+        output = .black
+    case "U":
+        output = .blue
+    case "G":
+        output = .green
+    default: break
+    }
+    
+    return output
+}
+
+struct CommanderListView: View {
 
     @State private var searchText = ""
-    @Binding var historyPresented: Bool
+    @Binding var commanderViewPresented: Bool
     @Binding var commanderName: String
+    @Binding var commanderColours: [String]
     
     @State private var results = [Result]()
     @State private var tempResults = [Result]()
@@ -48,25 +69,7 @@ struct Test_View: View {
        
     }
    
-    func convertColor(input: String) -> Color {
-        var output = Color.white
-        
-        switch input {
-        case "W":
-            output = .white
-        case "R":
-            output = .red
-        case "B":
-            output = .black
-        case "U":
-            output = .blue
-        case "G":
-            output = .green
-        default: break
-        }
-        
-        return output
-    }
+    
     
     var commanders: [Result] {
         if searchText.isEmpty {
@@ -91,6 +94,8 @@ struct Test_View: View {
  
             if taskLoading {
                 LoadingView(taskProgress: $taskProgress)
+                    .navigationTitle("Player 1 Commander")
+                    
             } else {
             List {
                 ForEach(commanders, id: \.self) { names in
@@ -124,7 +129,8 @@ struct Test_View: View {
                         Spacer()
                         Button {
                             commanderName = names.name
-                            historyPresented = false
+                            commanderColours = names.color_identity
+                            commanderViewPresented = false
                         } label: {
                             Text("Select")
                         }
@@ -133,18 +139,24 @@ struct Test_View: View {
                 }
         }
             .navigationTitle("Player 1 Commander")
-            .navigationBarItems(trailing: Button("Done") {
-                historyPresented = false
-                taskLoading = false
-            })
+            .toolbar {
+                Button("Done") {
+                    commanderViewPresented = false
+                }
+            }
+            
+            
             }
         }
+        
         .task {
             await loadData(page: pageNumber)
             taskLoading = false
         }
         
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+        
+        
 
             
     }

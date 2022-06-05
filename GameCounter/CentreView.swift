@@ -10,7 +10,7 @@ import Combine
 
 
 struct CentreView: View {
-    
+    @ObservedObject var settings: Settings
     @State var rectHeight = 50.0
     
     @State private var historyPresented = false
@@ -43,12 +43,12 @@ struct CentreView: View {
                                 
                                 .sheet(isPresented: $historyPresented) {
                                     
-                                    Test_View(historyPresented: $historyPresented, commanderName: $commanderName)
+                                    HistoryView(historyPresented: $historyPresented, lifeLog: $lifeLog)
 
                                 }
                             
                     }
-                        Text(commanderName)
+                        
                     }
                     
                   
@@ -89,7 +89,7 @@ struct CentreView: View {
                     }
                     .sheet(isPresented: $settingsPresented) {
                         
-                        SettingsView(playerCount: $playerCount)
+                        SettingsView(settings: settings, settingsPresented: $settingsPresented)
 
                     }
                     

@@ -29,15 +29,18 @@ extension Color {
 }
 
 struct ContentView: View {
+    
     @State var lifeLog: LifeHistory
     @State var timerSize: CGFloat = 100.0
     @State var strokeSize: CGFloat = 10.0
-
+    
+    @StateObject var settings = Settings()
+    
+    @State var bannerVisible = true
 
     @State var playerCount = 2
     
-    
-   
+
     var body: some View {
         ZStack{
             Rectangle()
@@ -46,42 +49,42 @@ struct ContentView: View {
             
             VStack(spacing: 25) {
                 
-                if playerCount == 2 {
+                if settings.playerCount == 2 {
                     
-                    PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
+                    PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
 
-                    PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
+                    PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
 
-                } else if playerCount == 3 {
+                } else if settings.playerCount == 3 {
                     
                     HStack(spacing: 0) {
-                        PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
+                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
                             .ignoresSafeArea()
-                        PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player3Color, rotation: 180, rotated: 2, isEven: false, player: 3)
+                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player3Color, rotation: 180, rotated: 2, isEven: false, player: 3)
                     }
 
-                    PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
+                    PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
                     
-                } else if playerCount == 4 {
+                } else if settings.playerCount == 4 {
                     HStack(spacing: 0) {
-                        PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
+                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
                             .ignoresSafeArea()
                         
-                        PlayerRectView(lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player3Color, rotation: 180, rotated: 2, isEven: false, player: 3)
+                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player3Color, rotation: 180, rotated: 2, isEven: false, player: 3)
                             
                     }
                     
                     
                     HStack(spacing: 0) {
-                        PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player4Color, rotation: 0, rotated: 0, isEven: true, player: 4)
-                        PlayerRectView(lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
+                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player4Color, rotation: 0, rotated: 0, isEven: true, player: 4)
+                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
                     }
                     
                 }
                 
             }
             .ignoresSafeArea()
-            CentreView(lifeLog: $lifeLog, playerCount: $playerCount)
+            CentreView(settings: settings, lifeLog: $lifeLog, playerCount: $playerCount)
                 .shadow(color: .black.opacity(1.0), radius: 5, x: 0, y: 0)
                 .ignoresSafeArea()
             
@@ -97,7 +100,7 @@ struct ContentView: View {
 }
 
 struct PlayerRectView: View {
-   
+    @ObservedObject var settings: Settings
     @State var lifeTotal = 20
     @Binding var lifeLog: [Int]
     @Binding var damageTaken: [Int]
@@ -105,7 +108,9 @@ struct PlayerRectView: View {
     @State var rotation: Double
     @State var rotated: Int
     @State var scaleValue = 1.0
-    
+    @State var commanderViewPresented = false
+    @State var commanderName = "Adriana, the Giant Flying Scooter"
+    @State var commanderColours = ["B", "W", "U", "G", "R"]
     var isEven: Bool
     var player: Int
     
@@ -137,9 +142,7 @@ struct PlayerRectView: View {
         ZStack{
             Rectangle()
                 .foregroundColor(rectColor)
-                
-            
-           
+
             HStack{
                 
                 LifeChangeButtonView(lifeTotal: $lifeTotal, damage: 0, rectColor: $rectColor, damageTaken: $damageTaken, lifeLog: $lifeLog, rotation: $rotation, rotated: $rotated)
@@ -248,42 +251,107 @@ struct PlayerRectView: View {
             }
 
             
-            HStack{
-                Spacer()
-                Image(systemName: "minus")
-                    .font(Font.system(size: 20, weight: .bold))
-                    .foregroundColor(.black.opacity(0.50))
-                
-                Text("\(lifeTotal)")
-                    .fontWeight(.medium)
-                    .font(.system(size: 220))
-                    .padding([.leading, .trailing], 10)
-                    .minimumScaleFactor(0.1)
-                    .lineLimit(1)
-                    .foregroundColor(.black)
-                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
-                    .allowsHitTesting(false)
-                    .monospacedDigit()
-                    .ignoresSafeArea()
+            ZStack {
+                HStack{
+                    Spacer()
+                    Image(systemName: "minus")
+                        .font(Font.system(size: 20, weight: .bold))
+                        .foregroundColor(.black.opacity(0.50))
                     
+                    Text("\(lifeTotal)")
+                        .fontWeight(.medium)
+                        .font(.system(size: 220))
+                        .padding([.leading, .trailing], 10)
+                        .minimumScaleFactor(0.1)
+                        .lineLimit(1)
+                        .foregroundColor(.black)
+                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
+                        .allowsHitTesting(false)
+                        .monospacedDigit()
+                        
+                        
+                        
+                    Image(systemName: "plus")
+                        .font(Font.system(size: 20, weight: .bold))
+                        .minimumScaleFactor(0.1)
+                        .foregroundColor(.black.opacity(0.50))
                     
-                Image(systemName: "plus")
-                    .font(Font.system(size: 20, weight: .bold))
-                    .minimumScaleFactor(0.1)
-                    .foregroundColor(.black.opacity(0.50))
-                
-                Spacer()
-                
+                    Spacer()
+                    
+                }
+                .padding()
+                if settings.bannerVisible {
+                VStack {
+                    Spacer()
+                        BannerView(commanderName: $commanderName, commanderColours: $commanderColours)
+                        .sheet(isPresented: $commanderViewPresented, content: {
+                            CommanderListView(commanderViewPresented: $commanderViewPresented, commanderName: $commanderName, commanderColours: $commanderColours)
+                        })
+                        .padding(50)
+                }
+                .onTapGesture {
+                    commanderViewPresented = true
+                }
+                }
             }
-            .padding()
-            
             .rotationEffect(.degrees(rotation))
             .scaleEffect(scaleValue)
             .animation(.spring(), value: rotation)
+
             
 
         }
         
     }
         
+}
+
+struct BannerView: View {
+    @Binding var commanderName: String
+    @Binding var commanderColours: [String]
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 5)
+                
+                .foregroundColor(.white.opacity(0.7))
+                .shadow(radius: 5.0)
+                
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(commanderName)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        
+                    HStack(spacing: 3){
+                        ForEach(commanderColours, id: \.self) { colour in
+                            Rectangle()
+                                .foregroundColor(convertColor(input: colour))
+                        }
+                    }
+                    .frame(height: 3.5)
+                }
+                .frame(maxHeight: 20)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 5.0)
+                .padding(.vertical, 5.0)
+                Spacer()
+            
+                
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: 200)
+        
+    }
+}
+
+
+struct Preview: PreviewProvider {
+    static var previews: some View {
+   //     ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [20], lifeLogP2: [20], damageTakenP2: [20])).previewDevice("iPad Mini (6th Generation)")
+        
+        ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [20], lifeLogP2: [20], damageTakenP2: [20])).previewDevice("iPhone 12 Pro")
+       
+
+            
+    }
 }

@@ -7,61 +7,43 @@
 
 import SwiftUI
 
+enum Game: String, Equatable, CaseIterable {
+    case mtg = "Magic: The Gathering",
+         fab = "Flesh and Blood",
+         ygo = "Yu-Gi-Oh!",
+         pkm = "Pokémon",
+         cst = "Custom Settings"
+}
+       
 struct GamePresets {
-    var gameList = [
-        "Magic: The Gathering",
-        "Flesh and Blood",
-        "Yu-Gi-Oh!",
-        "Pokémon",
-        "Custom Settings"
-    ]
-    
+  
     var modeList = ["Standard", "Commander"]
     
-    mutating func chooseMode(mode: String) {
+    mutating func chooseMode(mode: Game) {
         switch mode {
-        case "Magic: The Gathering":
+        case .mtg:
             modeList = ["Standard", "Commander"]
-        case "Yu-Gi-Oh!":
+        case .ygo:
             modeList = ["Y1", "Y2"]
-        case "Pokémon":
+        case .pkm:
             modeList = ["P1", "P2"]
-        case "Flesh and Blood":
+        case .fab:
             modeList = ["Blitz", "Classic Constructed"]
-        case "Custom Settings":
+        case .cst:
             modeList = [""]
-        default:
-            modeList = ["Failure"]
         }
-
     }
-    var selectedGame = "Magic: The Gathering"
+    var selectedGame = Game.mtg
     var selectedMode = "Standard"
 }
 
-struct PlayerLifeSettings: View {
-    @Binding var startingLife: Int
-    var playerName: String
-    var body: some View {
-        HStack{
-        Text(playerName)
-        Spacer()
-        Text("\(startingLife)")
-        Stepper("", value: $startingLife, in: 1...100, step: 5)
-            .labelsHidden()
-        }
-    }
-}
-
-
 struct SettingsView: View {
-    @Binding var playerCount: Int
+    @ObservedObject var settings: Settings
+    @Binding var settingsPresented: Bool
     @State var gamePresets = GamePresets()
 
-    @State var selectedGame = "Magic: The Gathering"
-    @State var selectedMode = "Standard"
-    
     @State var equalLife = true
+    
     @State var startingLife = 20
    
     @State var playerLife = [20, 20, 20, 20]
@@ -77,9 +59,15 @@ struct SettingsView: View {
                     HStack {
                         Text("Number of players")
                         Spacer()
-                        Text("\(playerCount)")
-                        Stepper("", value: $playerCount, in: 2...4, step: 1)
+                        Text("\(settings.playerCount)")
+                        Stepper("", value: $settings.playerCount, in: 2...4, step: 1)
                             .labelsHidden()
+                    }
+                    
+                    HStack{
+                        Text("Player banners")
+                        Spacer()
+                        Toggle("", isOn: $settings.bannerVisible)
                     }
                     
                 }
@@ -87,12 +75,15 @@ struct SettingsView: View {
                 //Game mode section
                 Section("Game Selection") {
 
-                    PickerView(pickerItems: $gamePresets.gameList, selection: $selectedGame, title: "Game")
-                        .onChange(of: selectedGame) { _ in
-                            gamePresets.chooseMode(mode: selectedGame)
-                            selectedMode = gamePresets.modeList[0]
+                    PickerView(selection: $gamePresets.selectedGame, title: "Game")
+                        .onChange(of: gamePresets.selectedGame) { _ in
+                            gamePresets.chooseMode(mode: gamePresets.selectedGame)
+                            print(gamePresets.modeList)
+                            gamePresets.selectedMode = gamePresets.modeList[0]
                         }
-                    PickerView(pickerItems: $gamePresets.modeList, selection: $selectedMode, title: "Game Type")
+                    
+                    ModePickerView(pickerItems: $gamePresets.modeList, selection: $gamePresets.selectedMode, title: "Game Type")
+                   
                 }
                 
                 //Game specific settings
@@ -104,10 +95,10 @@ struct SettingsView: View {
                     }
                     
                     if !equalLife {
-                        ForEach(0..<playerCount, id: \.self) { player in
+                        ForEach(0..<settings.playerCount, id: \.self) { player in
                             PlayerLifeSettings(startingLife: $playerLife[player], playerName: "Player \(player + 1)")
                         }
-                        .animation(.spring(), value: playerCount)
+                        
                         HStack{
                             Spacer()
                             Button {
@@ -119,7 +110,6 @@ struct SettingsView: View {
                                 
                                 Text("Reset All")
                                     .foregroundColor(.red)
-                                    
                             }
                             
 
@@ -127,29 +117,56 @@ struct SettingsView: View {
                     } else {
                         PlayerLifeSettings(startingLife: $startingLife, playerName: "Starting Life")
                     }
-                        
-                    
+
                 }
+                
     
             }
+            
             .navigationTitle(Text("Settings"))
+            .toolbar {
+                Button("Done") {
+                    settingsPresented = false
+                }
+            }
         }
     }
 }
 struct PlaceHolder_View: View {
-    @State var playerCount = 2
+    @ObservedObject var settings = Settings()
+
     var body: some View {
-        SettingsView(playerCount: $playerCount)
+        SettingsView(settings: settings, settingsPresented: .constant(true))
     }
 }
 struct SettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
         PlaceHolder_View().previewDevice("iPhone 12 Pro")
+        
     }
 }
 
 struct PickerView: View {
+    var pickerItems = Game.allCases
+    @Binding var selection: Game
+   
+    var title: String
+
+    var body: some View {
+        VStack {
+            Picker(title, selection: $selection) {
+                ForEach(Game.allCases, id: \.self) { game in
+                    Text(game.rawValue)
+                }
+            }
+        }
+
+    }
+}
+
+struct ModePickerView: View {
     @Binding var pickerItems: [String]
     @Binding var selection: String
    
@@ -158,8 +175,8 @@ struct PickerView: View {
     var body: some View {
         VStack {
             Picker(title, selection: $selection) {
-                ForEach(pickerItems, id: \.self) {
-                    Text($0)
+                ForEach(pickerItems, id: \.self) { game in
+                    Text(game)
                 }
             }
         }
@@ -167,4 +184,16 @@ struct PickerView: View {
     }
 }
 
-
+struct PlayerLifeSettings: View {
+    @Binding var startingLife: Int
+    var playerName: String
+    var body: some View {
+        HStack{
+        Text(playerName)
+        Spacer()
+        Text("\(startingLife)")
+        Stepper("", value: $startingLife, in: 5...100, step: 5)
+            .labelsHidden()
+        }
+    }
+}

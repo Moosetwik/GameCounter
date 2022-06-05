@@ -14,4 +14,5 @@ struct LifeHistory {
     
     var lifeLogP2: [Int]
     var damageTakenP2: [Int]
+    
 }
