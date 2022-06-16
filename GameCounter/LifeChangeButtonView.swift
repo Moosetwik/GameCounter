@@ -17,14 +17,14 @@ struct LifeChangeButtonView: View {
     @State private var negativeTapped = false
     @State private var captureBegan = false
     @State var damage = 0
-    @Binding var rectColor: Color
     @Binding var damageTaken: [Int]
     @Binding var lifeLog: [Int]
     @State var posTouchdown = false
     @State var negTouchdown = false
     @Binding var rotation: Double
     @Binding var rotated: Int
-    
+    @ObservedObject var settings: Settings
+    @Binding var isRotated: Bool
     var timer = GameTime()
     
     @State var secondsElapsed = 0
@@ -88,85 +88,51 @@ struct LifeChangeButtonView: View {
 
     }
     
+    enum ButtonTap {
+        case positive, negative
+    }
+    
+    
+    
+    
     var body: some View {
-        
-      
-        
         ZStack {
             
-            if rotated == 0 || rotated == 2 {
-            HStack(spacing: 0) {
-                
-                Rectangle()
+            AdaptiveView(threshold: isRotated, spacing: 0) {
+                    Rectangle()
+                        .foregroundColor(!negTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
+                        .gesture(DragGesture(minimumDistance: 0)
+                            .onChanged({ _ in
+                                negTouchdown = true
+                            })
+                                .onEnded({ _ in
+                                    negTouchdown = false
+                                    buttonTapped(isPositive: false)
+                                })
+                    )
                     
-                    .foregroundColor(!negTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
-
-                    .gesture(DragGesture(minimumDistance: 0)
-                        .onChanged({ _ in
-                            negTouchdown = true
-                        })
-                            .onEnded({ _ in
-                                negTouchdown = false
-                                buttonTapped(isPositive: false)
+                    Rectangle()
+                        .foregroundColor(!posTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
+                        .gesture(DragGesture(minimumDistance: 0)
+                            .onChanged({ _ in
+                                posTouchdown = true
                             })
-                )
-                
-                Rectangle()
-                    .foregroundColor(!posTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
-
-                    .gesture(DragGesture(minimumDistance: 0)
-                        .onChanged({ _ in
-                            
-                            posTouchdown = true
-                        })
-                            .onEnded({ _ in
-                                posTouchdown = false
-                                
-                                buttonTapped(isPositive: true)
-                            })
-                )
-
-            }
-            .rotationEffect(.degrees(rotated == 2 ? 180 : 0))
-        }
-            
-            if rotated == 1 || rotated == 3 {
-            VStack(spacing: 0) {
-                
-                Rectangle()
-                    
-                    .foregroundColor(!negTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
-
-                    .gesture(DragGesture(minimumDistance: 0)
-                        .onChanged({ _ in
-                            negTouchdown = true
-                        })
-                            .onEnded({ _ in
-                                negTouchdown = false
-                                buttonTapped(isPositive: false)
-                            })
-                )
-                
-                Rectangle()
-                    .foregroundColor(!posTouchdown ? .white.opacity(0.01) : .white.opacity(0.5))
-               
-                    .gesture(DragGesture(minimumDistance: 0)
-                        .onChanged({ _ in
-                            
-                            posTouchdown = true
-                        })
-                            .onEnded({ _ in
-                                posTouchdown = false
-                                
-                                buttonTapped(isPositive: true)
-                            })
-                )
-
-            }
-            .rotationEffect(.degrees(rotated == 3 ? 180 : 0))
-            }
-           
- 
+                                .onEnded({ _ in
+                                    posTouchdown = false
+                                    buttonTapped(isPositive: true)
+                                })
+                    )
+                }
+            .rotationEffect(.degrees(rotated == 2 ? 180 : rotated == 3 ? 180 : 0))
+                    VStack{
+                    if settings.bannerVisible {
+                            Spacer()
+                            BannerView()
+                            .padding(50)
+                    }
+                    }
+                    .rotationEffect(.degrees(rotation))
+                    .animation(.spring(), value: rotation)
         }
         .onReceive(self.p1Timer) { _ in
             if damage != 0 {
@@ -190,6 +156,5 @@ struct LifeChangeButtonView: View {
     
     
 }
-
 
 

@@ -10,5 +10,5 @@ import Foundation
 class Settings: ObservableObject {
     @Published var playerCount = 2
     @Published var bannerVisible = true
-    
+    @Published var startLife = [20, 20, 20, 20]
 }

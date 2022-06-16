@@ -44,7 +44,7 @@ struct SettingsView: View {
 
     @State var equalLife = true
     
-    @State var startingLife = 20
+    @State var startingLife = [20, 20, 20, 20]
    
     @State var playerLife = [20, 20, 20, 20]
     
@@ -52,7 +52,7 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView() {
-            List {
+            Form {
                 //General settings
                 Section("General Settings") {
                     
@@ -96,7 +96,7 @@ struct SettingsView: View {
                     
                     if !equalLife {
                         ForEach(0..<settings.playerCount, id: \.self) { player in
-                            PlayerLifeSettings(startingLife: $playerLife[player], playerName: "Player \(player + 1)")
+                            PlayerLifeSettings(startingLife: .constant(20), equalLife: $equalLife, playerName: "Player")
                         }
                         
                         HStack{
@@ -115,7 +115,7 @@ struct SettingsView: View {
 
                         }
                     } else {
-                        PlayerLifeSettings(startingLife: $startingLife, playerName: "Starting Life")
+                        PlayerLifeSettings(startingLife: $startingLife[0], equalLife: $equalLife, playerName: "Starting Life")
                     }
 
                 }
@@ -143,7 +143,7 @@ struct SettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PlaceHolder_View().previewDevice("iPhone 12 Pro")
+        PlaceHolder_View().previewDevice("iPhone 13 Pro")
         
     }
 }
@@ -169,6 +169,7 @@ struct PickerView: View {
 struct ModePickerView: View {
     @Binding var pickerItems: [String]
     @Binding var selection: String
+    
    
     var title: String
 
@@ -186,6 +187,8 @@ struct ModePickerView: View {
 
 struct PlayerLifeSettings: View {
     @Binding var startingLife: Int
+    @Binding var equalLife: Bool
+
     var playerName: String
     var body: some View {
         HStack{

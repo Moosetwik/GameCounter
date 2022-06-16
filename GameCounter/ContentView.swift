@@ -15,6 +15,16 @@ extension Int {
         let seconds = self % 60
         return String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
     }
+    
+    var roundUp: Int {
+        let rounded = ceil(Double(self) / 2)
+        return Int(rounded)
+    }
+    
+    var roundDown: Int {
+        let rounded = floor(Double(self) / 2)
+        return Int(rounded)
+    }
 }
 
 extension Color {
@@ -28,6 +38,8 @@ extension Color {
     }
 }
 
+
+
 struct ContentView: View {
     
     @State var lifeLog: LifeHistory
@@ -35,56 +47,36 @@ struct ContentView: View {
     @State var strokeSize: CGFloat = 10.0
     
     @StateObject var settings = Settings()
-    
-    @State var bannerVisible = true
 
-    @State var playerCount = 2
-    
+    @StateObject var player1 = Player(startLife: 20, currentLife: 20, lifeHistory: [20], name: "Player 1", bgColor: .player1Color)
+    @StateObject var player2 = Player(startLife: 20, currentLife: 20, lifeHistory: [20], name: "Player 2", bgColor: .player2Color)
+    @StateObject var player3 = Player(startLife: 20, currentLife: 20, lifeHistory: [20], name: "Player 3", bgColor: .player3Color)
+    @StateObject var player4 = Player(startLife: 20, currentLife: 20, lifeHistory: [20], name: "Player 4", bgColor: .player4Color)
+    var players: [Player] {
+        [player1, player2, player3, player4]
+    }
 
     var body: some View {
         ZStack{
             Rectangle()
-                .foregroundColor(.black)
+                .foregroundColor(.white)
                 .ignoresSafeArea()
-            
-            VStack(spacing: 25) {
-                
-                if settings.playerCount == 2 {
-                    
-                    PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
-
-                    PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
-
-                } else if settings.playerCount == 3 {
-                    
-                    HStack(spacing: 0) {
-                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
-                            .ignoresSafeArea()
-                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player3Color, rotation: 180, rotated: 2, isEven: false, player: 3)
+            VStack {
+                HStack(spacing: 0) {
+                    ForEach(0..<settings.playerCount.roundUp, id: \.self) { p in
+                        PlayerView(players: players, player: p + 2, settings: settings, rotation: 180.0, rotationIndex: 2)
                     }
-
-                    PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
-                    
-                } else if settings.playerCount == 4 {
-                    HStack(spacing: 0) {
-                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player2Color, rotation: 180, rotated: 2, isEven: true, player: 2)
-                            .ignoresSafeArea()
-                        
-                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP2, damageTaken: $lifeLog.damageTakenP2, rectColor: .player3Color, rotation: 180, rotated: 2, isEven: false, player: 3)
-                            
-                    }
-                    
-                    
-                    HStack(spacing: 0) {
-                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player4Color, rotation: 0, rotated: 0, isEven: true, player: 4)
-                        PlayerRectView(settings: settings, lifeLog: $lifeLog.lifeLogP1, damageTaken: $lifeLog.damageTakenP1, rectColor: .player1Color, rotation: 0, rotated: 0, isEven: false, player: 1)
-                    }
-                    
                 }
-                
-            }
+                HStack(spacing: 0) {
+                    ForEach(0..<settings.playerCount.roundDown, id: \.self) { p in
+                        PlayerView(players: players, player: p, settings: settings)
+                    }
+                }
+            
+                }
             .ignoresSafeArea()
-            CentreView(settings: settings, lifeLog: $lifeLog, playerCount: $playerCount)
+
+            CentreView(settings: settings, lifeLog: $lifeLog)
                 .shadow(color: .black.opacity(1.0), radius: 5, x: 0, y: 0)
                 .ignoresSafeArea()
             
@@ -99,228 +91,128 @@ struct ContentView: View {
     }
 }
 
-struct PlayerRectView: View {
-    @ObservedObject var settings: Settings
-    @State var lifeTotal = 20
-    @Binding var lifeLog: [Int]
-    @Binding var damageTaken: [Int]
-    @State var rectColor: Color
-    @State var rotation: Double
-    @State var rotated: Int
-    @State var scaleValue = 1.0
-    @State var commanderViewPresented = false
-    @State var commanderName = "Adriana, the Giant Flying Scooter"
-    @State var commanderColours = ["B", "W", "U", "G", "R"]
-    var isEven: Bool
+struct PlayerView: View {
+    var players: [Player]
     var player: Int
     
+    @ObservedObject var settings: Settings
+
+    @State var commanderViewPresented = false
+    
+
     var animation: Animation {
         Animation.easeOut
     }
-    
-   
-    
-    func rotate() {
-            rotation += 90
-        
-        rotated += 1
-        if scaleValue == 1.0 {
-            scaleValue = 0.75
+    @State var rotation = 0.0
+    @State var isRotated = false
+    @State var rotationIndex = 0
+    var isFlipped: Bool {
+        let num = Int(rotation) / 180
+        if (num % 2) == 0 {
+            return true
         } else {
-            scaleValue = 1.0
+            return false
         }
-        
-        if rotated == 4 {
-            rotated = 0
-        }
-        print(rotation)
-        print(rotated)
     }
-    
+    @State var negTouched = false
+    @State var posTouched = false
+
     var body: some View {
         
         ZStack{
-            Rectangle()
-                .foregroundColor(rectColor)
-
-            HStack{
-                
-                LifeChangeButtonView(lifeTotal: $lifeTotal, damage: 0, rectColor: $rectColor, damageTaken: $damageTaken, lifeLog: $lifeLog, rotation: $rotation, rotated: $rotated)
-
-            }
-            
-    
-            if player == 1 {
-                VStack {
-                    HStack {
-                        
-                        Button {
-                            rotate()
-                            print("rotate")
-                        } label: {
-                            Image(systemName: "rotate.right.fill")
-                                .frame(minWidth: 80, minHeight: 80)
-                                .contentShape(Rectangle())
-                                .foregroundColor(.black)
-                                
-                            
-                        }
-                        .padding(30)
-                        .offset(x: 0, y: 0)
-                        
-                        Spacer()
-                    }
-                    Spacer()
-                }
-
-            } else if player == 2 {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Button {
-                            rotate()
-                            print("rotate")
-                        } label: {
-                            Image(systemName: "rotate.right.fill")
-                                .frame(minWidth: 80, minHeight: 80)
-                                .contentShape(Rectangle())
-                                .foregroundColor(.black)
-                                .rotationEffect(.degrees(180))
-                                
-                            
-                        }
-                        .padding(30)
-                        .offset(x: 0, y: 0)
-                        
-                        
-                    }
+            AdaptiveView(threshold: !isRotated, spacing: 0) {
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(!negTouched ? players[player].bgColor : players[player].bgColor.opacity(0.5))
+                        .gesture(DragGesture(minimumDistance: 0)
+                            .onChanged({ _ in
+                                    negTouched = true
+                            })
+                                .onEnded({ _ in
+                                    negTouched = false
+                                    players[player].currentLife -= 1
+                                })
+                    )
                     
-                }
-                
-            } else if player == 3 {
-                VStack {
-                    Spacer()
-                    HStack {
-                        
-                        Button {
-                            rotate()
-                            print("rotate")
-                        } label: {
-                            Image(systemName: "rotate.right.fill")
-                                .frame(minWidth: 80, minHeight: 80)
-                                .contentShape(Rectangle())
-                                .foregroundColor(.black)
-                                .rotationEffect(.degrees(180))
-                                
-                            
-                        }
-                        
-                        .padding(30)
-                        .offset(x: 0, y: 0)
-                        
-                        Spacer()
-                    }
-                   
-                }
-             
-            } else if player == 4 {
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button {
-                            rotate()
-                            print("rotate")
-                        } label: {
-                            Image(systemName: "rotate.right.fill")
-                                .frame(minWidth: 80, minHeight: 80)
-                                .contentShape(Rectangle())
-                                .foregroundColor(.black)
-                            
-                                
-                            
-                        }
-                        .padding(30)
-                        .offset(x: 0, y: 0)
-                        
-                        
-                    }
-                    Spacer()
-                }
-             
-            }
-
-            
-            ZStack {
-                HStack{
-                    Spacer()
                     Image(systemName: "minus")
-                        .font(Font.system(size: 20, weight: .bold))
-                        .foregroundColor(.black.opacity(0.50))
-                    
-                    Text("\(lifeTotal)")
-                        .fontWeight(.medium)
-                        .font(.system(size: 220))
-                        .padding([.leading, .trailing], 10)
+                        .font(Font.system(size: 50, weight: .bold))
                         .minimumScaleFactor(0.1)
-                        .lineLimit(1)
-                        .foregroundColor(.black)
-                        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
-                        .allowsHitTesting(false)
-                        .monospacedDigit()
-                        
-                        
-                        
+                        .foregroundColor(players[player].bgColor)
+                        .shadow(radius: 10)
+                        .rotationEffect(.degrees(rotation))
+                    
+                }
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(!posTouched ? players[player].bgColor : players[player].bgColor.opacity(0.5))
+                        .gesture(DragGesture(minimumDistance: 0)
+                            .onChanged({ _ in
+                                    posTouched = true
+                            })
+                                .onEnded({ _ in
+                                    posTouched = false
+                                    players[player].currentLife += 1
+                                })
+                    )
                     Image(systemName: "plus")
-                        .font(Font.system(size: 20, weight: .bold))
+                        .font(Font.system(size: 50, weight: .bold))
                         .minimumScaleFactor(0.1)
-                        .foregroundColor(.black.opacity(0.50))
+                        .foregroundColor(players[player].bgColor)
+                        .shadow(radius: 10)
                     
-                    Spacer()
-                    
-                }
-                .padding()
-                if settings.bannerVisible {
-                VStack {
-                    Spacer()
-                        BannerView(commanderName: $commanderName, commanderColours: $commanderColours)
-                        .sheet(isPresented: $commanderViewPresented, content: {
-                            CommanderListView(commanderViewPresented: $commanderViewPresented, commanderName: $commanderName, commanderColours: $commanderColours)
-                        })
-                        .padding(50)
-                }
-                .onTapGesture {
-                    commanderViewPresented = true
-                }
                 }
             }
-            .rotationEffect(.degrees(rotation))
-            .scaleEffect(scaleValue)
-            .animation(.spring(), value: rotation)
+            .rotationEffect(.degrees(isFlipped ? 0 : 180))
 
+ 
+            RotateButton(rotation: $rotation, isRotated: $isRotated, player: player, rotationIndex: $rotationIndex)
+
+                Text("\(players[player].currentLife)")
+                    .fontWeight(.medium)
+                    .font(.system(size: 220))
+                    .padding([.leading, .trailing], 10)
+                    .minimumScaleFactor(0.1)
+                    .lineLimit(1)
+                    .foregroundColor(.black)
+                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
+                    .allowsHitTesting(false)
+                    .monospacedDigit()
+                    .rotationEffect(.degrees(rotation))
+                    .animation(.spring(), value: rotation)
             
-
+            AdaptiveView(threshold: isRotated, spacing: 0){
+                if rotationIndex == 0 || rotationIndex == 3 {
+                    Spacer()
+                }
+                BannerView()
+                    .padding()
+                    .offset(x: 0, y: -50)
+                    .rotationEffect(.degrees(rotation))
+                if rotationIndex == 1 || rotationIndex == 2 {
+                    Spacer()
+                }
+            }
+            
         }
         
     }
-        
 }
 
 struct BannerView: View {
-    @Binding var commanderName: String
-    @Binding var commanderColours: [String]
+    @State var commanderViewPresented = false
+    @State var commanderName = "Adriana, the Giant Flying Scooter"
+    @State var commanderColours = ["B", "W", "U", "G", "R"]
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 5)
-                
                 .foregroundColor(.white.opacity(0.7))
                 .shadow(radius: 5.0)
                 
-
                 VStack(alignment: .leading, spacing: 2) {
                     Text(commanderName)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
+                        .foregroundColor(.black)
                         
                     HStack(spacing: 3){
                         ForEach(commanderColours, id: \.self) { colour in
@@ -334,10 +226,15 @@ struct BannerView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 5.0)
                 .padding(.vertical, 5.0)
+                .onTapGesture {
+                    commanderViewPresented = true
+                }
                 Spacer()
-            
-                
+        
         }
+        .sheet(isPresented: $commanderViewPresented, content: {
+            CommanderListView(commanderViewPresented: $commanderViewPresented, commanderName: $commanderName, commanderColours: $commanderColours)
+        })
         .fixedSize(horizontal: false, vertical: true)
         .frame(maxWidth: 200)
         
@@ -349,9 +246,58 @@ struct Preview: PreviewProvider {
     static var previews: some View {
    //     ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [20], lifeLogP2: [20], damageTakenP2: [20])).previewDevice("iPad Mini (6th Generation)")
         
-        ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [20], lifeLogP2: [20], damageTakenP2: [20])).previewDevice("iPhone 12 Pro")
+        ContentView(lifeLog: LifeHistory(lifeLogP1: [20], damageTakenP1: [20], lifeLogP2: [20], damageTakenP2: [20])).previewDevice("iPhone 13 Pro")
        
 
             
+    }
+}
+
+struct RotateButton: View {
+    @Binding var rotation: Double
+    @Binding var isRotated: Bool
+
+    var player: Int
+    @Binding var rotationIndex: Int
+    
+    
+    func rotate() {
+        rotation += 90
+        isRotated.toggle()
+        rotationIndex += 1
+        if rotationIndex == 4 {
+            rotationIndex = 0
+        }
+        print(player)
+    }
+    
+    var body: some View {
+        
+        HStack {
+            if player == 0 || player == 2 {
+                Spacer()
+            }
+            VStack {
+                if 2...3 ~= player {
+                    Spacer()
+                }
+                Button {
+                            rotate()
+                        } label: {
+                            Image(systemName: "rotate.right.fill")
+                                .frame(minWidth: 80, minHeight: 80)
+                                .contentShape(Rectangle())
+                                .foregroundColor(.black)
+                        }
+                        .padding()
+                    
+                if 0...1 ~= player {
+                    Spacer()
+                }
+            }
+            if player == 1 || player == 3 {
+                Spacer()
+            }
+        }
     }
 }
